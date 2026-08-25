@@ -35,7 +35,8 @@ set(FREERTOS_KERNEL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/FreeRTOS-Kernel)
 include(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2350_ARM_NTZ/FreeRTOS_Kernel_import.cmake)
 
 # Add executable
-add_executable(freeRTOS main.cpp)
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
+add_executable(freeRTOS main.cpp ${SOURCES})
 
 pico_set_program_name(freeRTOS "freeRTOS")
 pico_set_program_version(freeRTOS "0.1")
@@ -45,8 +46,10 @@ pico_enable_stdio_usb(freeRTOS 1)
 
 target_link_libraries(freeRTOS
     pico_stdlib
+    pico_multicore
     FreeRTOS-Kernel
     FreeRTOS-Kernel-Heap4
+    hardware_i2c
 )
 
 target_include_directories(freeRTOS PRIVATE
