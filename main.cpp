@@ -5,15 +5,20 @@
 int main()
 {
     stdio_init_all();
-    gpio_init(25);
-    gpio_set_dir(25, GPIO_OUT);
-
+    for (int i = 0; i < 49; i++) {
+        gpio_init(i);
+        gpio_set_dir(i, GPIO_OUT);
+    }
 
     while (true) {
-        gpio_put(25, 1);
-        printf("Hello, world!\n");
+        for (int i = 0; i < 49; i++) {
+            gpio_put(i, 1);
+        }
         sleep_ms(500);
-        gpio_put(25, 0);
+
+        for (int i = 0; i < 49; i++) {
+            gpio_put(i, 0);
+        }
         sleep_ms(500);
     }
 }
