@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(UART_test main.cpp )
+add_executable(UART_test main.cpp uart_echo.cpp)
 
 pico_set_program_name(UART_test "UART_test")
 pico_set_program_version(UART_test "0.1")
