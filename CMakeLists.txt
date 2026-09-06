@@ -34,9 +34,12 @@ project(BMI270 C CXX ASM)
 pico_sdk_init()
 
 # 主程序 (main 在 main.cpp, 驱动封装在 src/BMI270.cpp + include/BMI270.hpp)
+file(GLOB SRC_FILES
+    ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp
+)
 add_executable(BMI270
     main.cpp
-    src/BMI270.cpp
+    ${SRC_FILES}
 )
 
 pico_set_program_name(BMI270 "BMI270")
