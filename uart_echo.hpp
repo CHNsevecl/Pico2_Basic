@@ -21,6 +21,7 @@
 
 #include <vector>
 #include "hardware/timer.h"
+#include "hardware/uart.h"
 
 class UART {
 private:

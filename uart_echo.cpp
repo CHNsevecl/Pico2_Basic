@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
-#include "hardware/uart.h"
 #include "hardware/gpio.h"
 #include "uart_echo.hpp"
 
