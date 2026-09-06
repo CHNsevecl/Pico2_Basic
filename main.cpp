@@ -8,7 +8,12 @@
 int main() {
     // 初始化标准库（USB stdio 输出）
     stdio_init_all();
-    UART uart;
+
+    while (!stdio_usb_connected()) {
+        sleep_ms(10);
+    }
+    
+    UART uart(uart0,115200, 0, 1); // 使用 UART0，波特率 115200，TX=0, RX=1
 
     // 初始化 UART 并打印启动信息
     uart.uart_echo_init();

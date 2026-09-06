@@ -10,20 +10,32 @@
 
 // ============= 可配置参数（修改后请重新编译） =============
 // UART总线选择: uart0 或 uart1
-#define UART_ID uart1
-#define UART_BAUD_RATE 115200
+#define DEFAULT_UART_ID uart1
+#define DEFAULT_UART_BAUD_RATE 115200
 
 // 当前默认使用 UART1: TX=8, RX=9
 // 可根据需要修改为其他有效引脚
-#define UART_TX_PIN 8
-#define UART_RX_PIN 9
+#define DEFAULT_UART_TX_PIN 8
+#define DEFAULT_UART_RX_PIN 9
 // =========================================================
 
 #include <vector>
 #include "hardware/timer.h"
 
 class UART {
+private:
+    uart_inst_t *UART_ID;
+    uint UART_BAUD_RATE;
+    uint UART_TX_PIN;
+    uint UART_RX_PIN;
 public:
+    UART(uart_inst_t *id = DEFAULT_UART_ID, uint baud = DEFAULT_UART_BAUD_RATE, uint tx = DEFAULT_UART_TX_PIN, uint rx = DEFAULT_UART_RX_PIN)
+        : UART_ID(id),
+          UART_BAUD_RATE(baud),
+          UART_TX_PIN(tx),
+          UART_RX_PIN(rx)
+    {}
+
     // 初始化 UART（硬件配置 + 打印启动信息），内部会调用 uart_init()
     void uart_echo_init();
 
