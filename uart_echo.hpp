@@ -20,13 +20,19 @@
 // =========================================================
 
 #include <vector>
+#include "hardware/timer.h"
 
 class UART {
 public:
     // 初始化 UART（硬件配置 + 打印启动信息），内部会调用 uart_init()
+    void uart_echo_init();
+
+    // 通过 UART 发送字节（不包含结尾的 '\0'）
     void uart_echo_send_byte(std::vector<uint8_t> byte, int len);
 
-    void uart_echo_init();
+    // 通过 UART 接收字节（不包含结尾的 '\0'）
+    std::vector<uint8_t> uart_echo_receive_byte(int len = 8, uint32_t timeout_ms = 10);
+
 
     // 通过 UART 发送字符串（不包含结尾的 '\0'）
     void uart_echo_send_string(const char *str);

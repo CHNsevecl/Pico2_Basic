@@ -61,6 +61,33 @@ void UART::uart_echo_send_byte(std::vector<uint8_t> byte, int len) {
     }
 }
 
+std::vector<uint8_t> UART::uart_echo_receive_byte(int len,uint32_t timeout_ms) {
+    std::vector<uint8_t> received_bytes;
+    received_bytes.reserve(len); // 预分配内存，提高效率
+    
+    uint64_t start_time = time_us_64();  // 使用64位避免溢出
+    uint64_t timeout_us = (uint64_t)timeout_ms * 1000;
+    
+    while (received_bytes.size() < len) {
+        // 1. 检查超时
+        if (time_us_64() - start_time > timeout_us) {
+            printf("UART接收超时，已接收 %zu 字节\n", received_bytes.size());
+            break; // 超时退出，返回已接收的数据
+        }
+        
+        // 2. 检查是否有数据可读（非阻塞）
+        if (uart_is_readable(UART_ID)) {
+            uint8_t byte = uart_getc(UART_ID);
+            received_bytes.push_back(byte);
+        } else {
+            // 3. 没有数据时短暂休眠，避免CPU空转
+            sleep_us(100); // 100微秒轮询间隔
+        }
+    }
+    
+    return received_bytes;
+}
+
 // 主服务：每调用一次处理一轮接收/回显/心跳/状态（逻辑与原 main 循环体一致）
 void UART::uart_echo_service() {
     uint32_t now_us = time_us_32();
