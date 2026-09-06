@@ -307,7 +307,13 @@ void BMI270::print_state() {
     // ---- VOFA+ 加速度波形: "ax,ay,az\n" (mg) ----
     float acc_mg[3], gyr_dps[3], temp_c;
     if (read(acc_mg, gyr_dps, &temp_c)) {
-        printf("%.1f,%.1f,%.1f\n", acc_mg[0], acc_mg[1], acc_mg[2]);
+        #if BMI270_SERIAL_CHOSEN == 0
+            printf("%.1f,%.1f,%.1f\n", acc_mg[0], acc_mg[1], acc_mg[2]);
+        #elif BMI270_SERIAL_CHOSEN == 1 || BMI270_SERIAL_CHOSEN == 2
+            char buf[64];
+            snprintf(buf, sizeof(buf), "%.1f,%.1f,%.1f\n", acc_mg[0], acc_mg[1], acc_mg[2]);
+            uart_.uart_echo_send_string(buf);
+        #endif
     }
 #else
     // ---- RAW / 滤波模式: 文本输出 ----
