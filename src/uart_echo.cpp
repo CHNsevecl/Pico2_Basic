@@ -48,7 +48,11 @@ void UART::uart_echo_init() {
     last_report_time_us = time_us_32();
 }
 
-// 发送字符串
+/**
+ * 发送字符串
+ * @param str 要发送的字符串（不包含结尾的 '\0'）
+ * @warning 该函数不会自动添加换行符，如果需要换行，请在字符串中手动添加 '\n' 或 '\r\n'。
+ */
 void UART::uart_echo_send_string(const char *str) {
     for (int i = 0; str[i] != '\0'; i++) {
         uart_putc(UART_ID, str[i]);
@@ -86,6 +90,36 @@ std::vector<uint8_t> UART::uart_echo_receive_byte(int len,uint32_t timeout_ms) {
     }
     
     return received_bytes;
+}
+
+std::string UART::uart_echo_receive_string(uint32_t timeout_ms) {
+    std::string received_str = "null";
+    std::vector<uint8_t> received_bytes;
+    received_bytes.reserve(256); // 预分配内存，提高效率
+
+    uint64_t start_time = time_us_64();  // 使用64位避免溢出
+    uint64_t timeout_us = (uint64_t)timeout_ms * 1000;
+
+
+    while (time_us_64() - start_time < timeout_us)
+    {
+        if (uart_is_readable(UART_ID)) {
+            uint8_t byte = uart_getc(UART_ID);
+            if(byte == '\n'){
+                received_str = std::string(received_bytes.begin(), received_bytes.end());
+                //received_bytes.begin()迭代器起始位
+                //received_bytes.end()迭代器终止位，received_bytes.back()表示最后一个值
+                break; // 收到换行符，结束接收
+            }
+            received_bytes.push_back(byte);
+
+        } else {
+            // 3. 没有数据时短暂休眠，避免CPU空转
+            sleep_us(100); // 100微秒轮询间隔
+        } 
+    }
+    
+    return received_str; // 超时未接收到任何数据，返回默认字符串
 }
 
 // 主服务：每调用一次处理一轮接收/回显/心跳/状态（逻辑与原 main 循环体一致）

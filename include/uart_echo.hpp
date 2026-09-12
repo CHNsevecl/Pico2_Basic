@@ -21,6 +21,7 @@
 
 #include <vector>
 #include "hardware/timer.h"
+#include <string>
 #include "hardware/uart.h"
 
 class UART {
@@ -45,6 +46,9 @@ public:
 
     // 通过 UART 接收字节（不包含结尾的 '\0'）
     std::vector<uint8_t> uart_echo_receive_byte(int len = 8, uint32_t timeout_ms = 10);
+
+    // 通过 UART 接收字符串（不包含结尾的 '\0'）
+    std::string uart_echo_receive_string(uint32_t timeout_ms = 10);
 
 
     // 通过 UART 发送字符串（不包含结尾的 '\0'）
