@@ -266,7 +266,7 @@ bool BMI270::update_attitude(float dt) {
 
     // 加速度计角度
     Angleacc[0] = atan2f(ay, az) * 180.0f / M_PI;   // roll
-    Angleacc[1] = atan2f(-ax, sqrtf(ay*ay + az*az)) * 180.0f / M_PI;  // pitch
+    Angleacc[1] = atan2f(-ax, az) * 180.0f / M_PI;  // pitch
 
     // 陀螺仪积分
     AngleGyrop[0] = Angle[0] + gx * dt;   // roll
@@ -274,8 +274,8 @@ bool BMI270::update_attitude(float dt) {
     AngleGyrop[2] = Angle[2] + gz * dt;   // yaw，不融合
 
     // 互补滤波
-    Angle[1] = BMI270_ATT_KP * AngleGyrop[0] + (1-BMI270_ATT_KP) * Angleacc[0];
-    Angle[0] = BMI270_ATT_KP * AngleGyrop[1] + (1-BMI270_ATT_KP) * Angleacc[1];
+    Angle[0] = BMI270_ATT_KP * AngleGyrop[0] + (1-BMI270_ATT_KP) * Angleacc[0];
+    Angle[1] = BMI270_ATT_KP * AngleGyrop[1] + (1-BMI270_ATT_KP) * Angleacc[1];
     Angle[2] = AngleGyrop[2];   // yaw 只积分
 
     // 加速度计估算倾角 (度): 重力方向投影
