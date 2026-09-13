@@ -54,6 +54,9 @@ public:
     // 通过 UART 发送字符串（不包含结尾的 '\0'）
     void uart_echo_send_string(const char *str);
 
+    //清除FIFO
+    void uart_echo_flush();
+
     // 主服务：处理一次接收/回显/超时/心跳（不含延时，建议主循环每 10ms 调用一次）
     void uart_echo_service();
 };

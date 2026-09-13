@@ -26,6 +26,8 @@ void UART::uart_echo_init() {
     // 设置TX和RX引脚
     gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
     gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
+    gpio_set_dir(UART_RX_PIN, GPIO_IN); // 确保是输入模式
+    gpio_pull_up(UART_RX_PIN); 
 
     // 禁用流控
     uart_set_hw_flow(UART_ID, false, false);
@@ -172,5 +174,11 @@ void UART::uart_echo_service() {
     if ((now_us - last_report_time_us) >= STATUS_INTERVAL_US) {
         printf("[状态] RX空闲中\n");
         last_report_time_us = now_us;
+    }
+}
+
+void UART::uart_echo_flush() {
+    while (uart_is_readable(UART_ID)) {
+        uart_getc(UART_ID);
     }
 }
