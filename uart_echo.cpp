@@ -3,6 +3,33 @@
 #include "hardware/uart.h"
 #include "hardware/gpio.h"
 #include "uart_echo.hpp"
+#include <charconv>
+#include <string>
+#include <system_error>
+
+bool parse_int(const std::string& s, int& out)
+{
+    if (s.empty()) return false;
+
+    auto [ptr, ec] = std::from_chars(s.data(),
+                                     s.data() + s.size(),
+                                     out);
+
+    return ec == std::errc() && ptr == s.data() + s.size();
+}
+
+bool parse_double(const std::string& s, double& out)
+{
+    if (s.empty()) return false;
+
+    auto [ptr, ec] = std::from_chars(s.data(),
+                                     s.data() + s.size(),
+                                     out,
+                                     std::chars_format::general);
+
+    return ec == std::errc() && ptr == s.data() + s.size();
+}
+
 
 // ============= 内部常量与状态（仅本文件可见） =============
 #define BUFFER_SIZE 256
