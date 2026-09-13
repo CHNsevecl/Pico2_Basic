@@ -29,25 +29,25 @@ set(PICO_BOARD pico2 CACHE STRING "Board type")
 include(pico_sdk_import.cmake)
 
 project(QD4310 C CXX ASM)
-
+set(CMAKE_BUILD_TYPE Debug)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
+add_executable(QD4310 main.cpp ./src/QD4310.cpp ./src/uart_echo.cpp)
 
-add_executable(QD4310 main.cpp ./src/QD4310.cpp)
+pico_enable_stdio_uart(QD4310 0)
+pico_enable_stdio_usb(QD4310 1)
 
 pico_set_program_name(QD4310 "QD4310")
 pico_set_program_version(QD4310 "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB
-pico_enable_stdio_uart(QD4310 0)
-pico_enable_stdio_usb(QD4310 1)
+
 
 # Add the standard library to the build
 target_link_libraries(QD4310
-        pico_stdlib
-        pico_stdio_uart)
+        pico_stdlib)
 
 # Add the standard include files to the build
 target_include_directories(QD4310 PRIVATE

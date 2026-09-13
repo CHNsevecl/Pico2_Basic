@@ -3,7 +3,8 @@
 
 //硬件库
 #include "pico/stdlib.h"
-#include "pico/stdio_uart.h"
+//串口库
+#include "uart_echo.hpp"
 //向量库
 #include <vector>
 //字节库
@@ -13,10 +14,10 @@
 #include <chrono>
 #include <thread>
 
-#define UART_ID uart1
-#define BAUD_RATE 115200
-#define UART_TX_PIN 8
-#define UART_RX_PIN 9
+#define UART_QD uart0
+#define BAUD_RATE_QD 115200
+#define UART_TX_PIN_QD 0
+#define UART_RX_PIN_QD 1
 #define PI 3.14159265358979323846
 
 /*!
@@ -43,14 +44,15 @@ struct QD4310_Feedback {
 
 class QD4310 {
 private:
-    void QD4310_SendCommand(const std::vector<uint8_t>& data);
-    std::vector<uint8_t> QD4310_ReceiveData(uint8_t start, uint32_t timeout_ms = 1000);
+    
 public:
-    QD4310(){
-        QD4310_Init();
+    UART uart_qd;
+    QD4310()
+    :uart_qd(UART_QD, BAUD_RATE_QD, UART_TX_PIN_QD, UART_RX_PIN_QD)
+    {
+        uart_qd.uart_echo_init();
     }
     QD4310_Feedback feedback;
-    void QD4310_Init();
     void QD4310_Contol(uint8_t addr ,uint8_t Control_mode ,uint16_t Control_quantity);
     uint16_t rad (double angle);
     uint8_t CRC8(const std::vector<uint8_t>& data);
