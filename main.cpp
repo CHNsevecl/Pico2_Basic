@@ -22,6 +22,7 @@
 int main() {
     stdio_init_all();
     while (!stdio_usb_connected()) sleep_ms(100);
+    std::cout << "[BMI270] starting...\n";
 
     BMI270 imu;
     if (!imu.begin()) {     // 默认 SDA=GP16, SCL=GP17, 自动探测 0x68/0x69
