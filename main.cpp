@@ -36,6 +36,7 @@ int main() {
     // 主循环: 打印一帧 + 自定间隔
     while (true) {
         imu.print_state();
+        std::cout << "[BMI270] acc_mg: " << imu.acc_mg[0] << ", " << imu.acc_mg[1] << ", " << imu.acc_mg[2] << "\n";
         sleep_ms(10);
     }
 }

@@ -321,7 +321,6 @@ void BMI270::print_state() {
 
 #elif BMI270_OUTPUT_MODE == 3
     // ---- VOFA+ 加速度波形: "ax,ay,az\n" (mg) ----
-    float acc_mg[3], gyr_dps[3], temp_c;
     if (read(acc_mg, gyr_dps, &temp_c)) {
         #if BMI270_SERIAL_CHOSEN == 0
             printf("%.1f,%.1f,%.1f\n", acc_mg[0], acc_mg[1], acc_mg[2]);
